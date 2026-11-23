@@ -1,0 +1,18 @@
+{
+  "fontFamily": {
+    "sans": "'Inter', 'Noto Sans', system-ui, -apple-system, sans-serif",
+    "numeric": "'Inter', system-ui, sans-serif"
+  },
+  "fontSize": {
+    "caption": "12px",
+    "label": "13px",
+    "body": "15px",
+    "cardHeading": "16px",
+    "sectionHeading": "20px",
+    "display": "28px",
+    "numeric": "32px"
+  },
+  "fontWeight": { "regular": "400", "medium": "500", "semibold": "600", "bold": "700" },
+  "lineHeight": { "tight": "1.2", "normal": "1.5", "relaxed": "1.7" },
+  "letterSpacing": { "tight": "-0.01em", "normal": "0", "numeric": "-0.02em" }
+}

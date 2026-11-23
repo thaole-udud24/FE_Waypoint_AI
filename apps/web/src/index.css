@@ -1,0 +1,205 @@
+@import "tailwindcss";
+@import "../../../packages/design-tokens/generated/web/tokens.css";
+
+/* Pastel Orbit – 軌道: override riêng cho web, không đổi token dùng chung mobile.
+   Xem WAYPOINT_BRD_SRS/UI_CODE_RULES.md mục 3. */
+:root {
+  --color-primary: #5b7cff;
+  --color-primary-dark: #3f5fe6;
+  --color-primary-light: #e8f0ff;
+  --color-secondary: #8f7cff;
+  --color-background: #eef1ff;
+  --color-surface: #ffffff;
+  --color-surface-tint: #f7f8ff;
+  --color-surface-secondary: #f1f3ff;
+  --color-text-primary: #1b1740;
+  --color-text-secondary: #4a4678;
+  --color-text-disabled: #b3b1d1;
+  --color-border: rgba(27, 23, 64, 0.1);
+  --color-success: #2fbf8a;
+  --color-warning: #f2b100;
+  --color-error: #f0457f;
+  --color-info: #5b7cff;
+  --color-attention: #ff7fb0;
+  --color-attention-light: #ffe6f0;
+  --color-attention-text: #d63b72;
+  --color-teal: #2fbf8a;
+  --color-teal-light: #ddf7ec;
+  --color-gold: #f2b100;
+  --color-gold-light: #fff4c9;
+  --color-chart-1: #5b7cff;
+  --color-chart-2: #ff7fb0;
+  --color-chart-3: #2fbf8a;
+
+  --card-sky: #e8f0ff;
+  --card-sakura: #ffe6f0;
+  --card-butter: #fff4c9;
+  --card-mint: #ddf7ec;
+  --card-lav: #eee6ff;
+  --stroke-orbit: rgba(124, 140, 255, 0.45);
+  --grad-planet: radial-gradient(circle at 30% 25%, #ffffff 0%, #bfd0ff 35%, #8fa6ff 70%, #b58cff 100%);
+  --grad-cta: linear-gradient(135deg, #5b7cff 0%, #8f7cff 100%);
+  --grad-alert: linear-gradient(135deg, #ffe0ec 0%, #fff1f6 60%, #fff4c9 100%);
+
+  --radius-card: 28px;
+  --radius-input: 16px;
+  --radius-button: 999px;
+  --font-sans: "Be Vietnam Pro", "Noto Sans", system-ui, -apple-system, sans-serif;
+  --font-numeric: "Be Vietnam Pro", system-ui, sans-serif;
+  --font-jp: "Zen Maru Gothic", "Noto Sans JP", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+[data-theme="dark"] {
+  --color-primary: #8b9bff;
+  --color-primary-dark: #5b7cff;
+  --color-primary-light: #262255;
+  --color-background: #14123a;
+  --color-surface: #1e1a4f;
+  --color-surface-tint: #241f5c;
+  --color-surface-secondary: #272161;
+  --color-text-primary: #f4f2ff;
+  --color-text-secondary: #c3bfe6;
+  --color-text-disabled: #6f69a0;
+  --color-border: rgba(244, 242, 255, 0.12);
+  --color-attention: #ff9dc4;
+  --color-attention-light: #3a2436;
+  --color-attention-text: #ffb8d6;
+  --color-teal: #4de8d1;
+  --color-teal-light: #1b3832;
+  --color-gold: #ffcb63;
+  --color-gold-light: #3a2e16;
+  --color-chart-1: #9db4ff;
+  --color-chart-2: #ff9dc4;
+  --color-chart-3: #4de8d1;
+}
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-light: var(--color-primary-light);
+  --color-secondary: var(--color-secondary);
+  --color-background: var(--color-background);
+  --color-surface: var(--color-surface);
+  --color-surface-tint: var(--color-surface-tint);
+  --color-surface-secondary: var(--color-surface-secondary);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-disabled: var(--color-text-disabled);
+  --color-border: var(--color-border);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --color-info: var(--color-info);
+  --color-attention: var(--color-attention);
+  --color-attention-light: var(--color-attention-light);
+  --color-attention-text: var(--color-attention-text);
+  --color-teal: var(--color-teal);
+  --color-teal-light: var(--color-teal-light);
+  --color-gold: var(--color-gold);
+  --color-gold-light: var(--color-gold-light);
+  --color-chart-1: var(--color-chart-1);
+  --color-chart-2: var(--color-chart-2);
+  --color-chart-3: var(--color-chart-3);
+  --font-sans: var(--font-sans);
+  --font-numeric: var(--font-numeric);
+  --radius-card: var(--radius-card);
+  --radius-input: var(--radius-input);
+  --radius-button: var(--radius-button);
+}
+
+.scrollbar-thin {
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-thin::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+@keyframes orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes cloud-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(4%, -3%) scale(1.06);
+  }
+}
+
+@keyframes cloud-drift-alt {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-5%, 4%) scale(1.04);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.orbit-ring-1 {
+  animation: orbit-spin 38s linear infinite;
+}
+.orbit-ring-2 {
+  animation: orbit-spin-reverse 52s linear infinite;
+}
+.orbit-ring-3 {
+  animation: orbit-spin 70s linear infinite;
+}
+.cloud-a {
+  animation: cloud-drift 18s ease-in-out infinite;
+}
+.cloud-b {
+  animation: cloud-drift-alt 22s ease-in-out infinite;
+}
+.cloud-c {
+  animation: cloud-drift 26s ease-in-out infinite;
+}
+.star-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-ring-1,
+  .orbit-ring-2,
+  .orbit-ring-3,
+  .cloud-a,
+  .cloud-b,
+  .cloud-c,
+  .star-twinkle {
+    animation: none;
+  }
+}

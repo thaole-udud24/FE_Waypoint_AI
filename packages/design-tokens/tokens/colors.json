@@ -1,0 +1,65 @@
+{
+  "brand": {
+    "primary": "#6C63FF",
+    "primaryDark": "#564FD1",
+    "primaryLight": "#ECE9FF",
+    "secondary": "#9B93F5"
+  },
+  "accent": {
+    "attention": "#FB7BA2",
+    "attentionLight": "#FFE7EF",
+    "attentionText": "#D63B72",
+    "teal": "#2DD4BF",
+    "tealLight": "#DFFBF6",
+    "gold": "#FDBA3B",
+    "goldLight": "#FFF3D9"
+  },
+  "chart": {
+    "series1": "#6C63FF",
+    "series2": "#FB7BA2",
+    "series3": "#2DD4BF"
+  },
+  "surface": {
+    "background": "#F6F5FC",
+    "surface": "#FFFFFF",
+    "surfaceTint": "#FBFAFF",
+    "surfaceSecondary": "#EFEDFB"
+  },
+  "text": {
+    "primary": "#221F3B",
+    "secondary": "#6F6A91",
+    "disabled": "#A9A4C7"
+  },
+  "border": {
+    "default": "#E3E0F5"
+  },
+  "semantic": {
+    "success": "#22C7A3",
+    "warning": "#FDBA3B",
+    "error": "#FB6B8D",
+    "info": "#6C63FF"
+  },
+  "dark": {
+    "background": "#13111F",
+    "surface": "#1C1930",
+    "surfaceTint": "#201C38",
+    "surfaceSecondary": "#251F3D",
+    "border": "#332C52",
+    "textPrimary": "#EDEBFA",
+    "textSecondary": "#A79FD1",
+    "textDisabled": "#5F577E",
+    "primary": "#8B82FF",
+    "primaryDark": "#6C63FF",
+    "primaryLight": "#2A2550",
+    "attention": "#FB7BA2",
+    "attentionLight": "#3A2436",
+    "attentionText": "#FF9FBD",
+    "teal": "#4DE8D1",
+    "tealLight": "#1B3832",
+    "gold": "#FFCB63",
+    "goldLight": "#3A2E16",
+    "chartSeries1": "#9D96FF",
+    "chartSeries2": "#FF9FBD",
+    "chartSeries3": "#4DE8D1"
+  }
+}

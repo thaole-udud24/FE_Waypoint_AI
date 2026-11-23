@@ -1,0 +1,10 @@
+{
+  "name": "waypoint",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter waypoint-web dev",
+    "build:web": "pnpm --filter waypoint-web build",
+    "lint:web": "pnpm --filter waypoint-web lint",
+    "test:web": "pnpm --filter waypoint-web test"
+  }
+}
