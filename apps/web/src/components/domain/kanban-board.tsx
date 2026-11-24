@@ -91,7 +91,10 @@ export function KanbanBoard({
                   {card.tagLabel && (
                     <span
                       className="mb-1.5 inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium"
-                      style={{ background: `${card.tagColor ?? "var(--color-primary)"}1f`, color: card.tagColor ?? "var(--color-primary)" }}
+                      style={{
+                        background: `color-mix(in srgb, ${card.tagColor ?? "var(--color-primary)"} 14%, transparent)`,
+                        color: card.tagColor ?? "var(--color-primary)",
+                      }}
                     >
                       {card.tagLabel}
                     </span>

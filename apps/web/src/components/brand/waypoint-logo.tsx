@@ -93,7 +93,10 @@ export function WaypointLogo({
 }) {
   const gradientId = useId();
   const { symbol, text, gap } = sizeMap[size];
-  const wordColor = variant === "aurora" ? variantColor.light.word : variantColor[variant].word;
+  const wordColor =
+    variant === "aurora" || variant === "light"
+      ? "var(--color-text-primary)"
+      : variantColor[variant].word;
 
   const symbolNode = <EnsoPathSymbol size={symbol} variant={variant} gradientId={`wp-logo-${gradientId}`} />;
 

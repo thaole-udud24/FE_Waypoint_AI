@@ -37,9 +37,23 @@
   --card-mint: #ddf7ec;
   --card-lav: #eee6ff;
   --stroke-orbit: rgba(124, 140, 255, 0.45);
-  --grad-planet: radial-gradient(circle at 30% 25%, #ffffff 0%, #bfd0ff 35%, #8fa6ff 70%, #b58cff 100%);
+  --grad-planet: radial-gradient(circle at 30% 25%, #dbe6ff 0%, #8fa6ff 45%, #5b7cff 78%, #8f7cff 100%);
   --grad-cta: linear-gradient(135deg, #5b7cff 0%, #8f7cff 100%);
   --grad-alert: linear-gradient(135deg, #ffe0ec 0%, #fff1f6 60%, #fff4c9 100%);
+  --grad-cosmos: linear-gradient(160deg, #dce8ff 0%, #c7d2ff 45%, #e3d3ff 100%);
+  --grad-desk-bg: linear-gradient(160deg, #ddf7ec 0%, #d3e1ff 100%);
+  --grad-admin-bg: linear-gradient(160deg, #eee6ff 0%, #dcd3f8 100%);
+
+  --rail-bg: #1b1740;
+  --rail-border: rgba(255, 255, 255, 0.08);
+  --tooltip-bg: #1b1740;
+  --tooltip-fg: #ffffff;
+  --cta-dark-bg: #1b1740;
+  --cta-dark-fg: #ffffff;
+  --chip-surface: rgba(255, 255, 255, 0.65);
+  --chip-border: rgba(255, 255, 255, 0.75);
+  --color-gold-text: #8a6500;
+  --color-teal-text: #0f7657;
 
   --radius-card: 28px;
   --radius-input: 16px;
@@ -72,6 +86,36 @@
   --color-chart-1: #9db4ff;
   --color-chart-2: #ff9dc4;
   --color-chart-3: #4de8d1;
+
+  /* Đêm vũ trụ: thẻ pastel pha trong suốt trên nền #1e1a4f để giữ chữ sáng đọc rõ */
+  --card-sky: color-mix(in srgb, #5b7cff 18%, var(--color-surface));
+  --card-sakura: color-mix(in srgb, #ff7fb0 18%, var(--color-surface));
+  --card-butter: color-mix(in srgb, #ffcb63 16%, var(--color-surface));
+  --card-mint: color-mix(in srgb, #4de8d1 16%, var(--color-surface));
+  --card-lav: color-mix(in srgb, #8f7cff 20%, var(--color-surface));
+  --stroke-orbit: rgba(157, 180, 255, 0.38);
+  --grad-planet: radial-gradient(circle at 30% 25%, #a8beff 0%, #6d86ff 45%, #4b5ee0 78%, #7d5ce6 100%);
+  --grad-cta: linear-gradient(135deg, #4b6bff 0%, #7d66ff 100%);
+  --grad-alert: linear-gradient(
+    135deg,
+    color-mix(in srgb, #ff7fb0 22%, var(--color-surface)) 0%,
+    color-mix(in srgb, #8f7cff 18%, var(--color-surface)) 55%,
+    color-mix(in srgb, #ffcb63 14%, var(--color-surface)) 100%
+  );
+  --grad-cosmos: linear-gradient(160deg, #14123a 0%, #201b52 50%, #2a2468 100%);
+  --grad-desk-bg: linear-gradient(160deg, #112a27 0%, #172347 100%);
+  --grad-admin-bg: linear-gradient(160deg, #1b1640 0%, #281f56 100%);
+
+  --rail-bg: #120f35;
+  --rail-border: rgba(244, 242, 255, 0.12);
+  --tooltip-bg: #2e2968;
+  --tooltip-fg: #f4f2ff;
+  --cta-dark-bg: #5b7cff;
+  --cta-dark-fg: #ffffff;
+  --chip-surface: rgba(255, 255, 255, 0.1);
+  --chip-border: rgba(244, 242, 255, 0.18);
+  --color-gold-text: #ffd66b;
+  --color-teal-text: #5eead4;
 }
 
 @theme {
