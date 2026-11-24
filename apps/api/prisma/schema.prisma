@@ -1,0 +1,372 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ROLE_WRK
+  ROLE_SUP
+  ROLE_ADM
+}
+
+enum LawPackStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DocumentType {
+  CONTRACT
+  PAYSLIP
+  TIMESHEET
+  OTHER
+}
+
+enum OcrStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id                  String          @id @default(cuid())
+  email               String          @unique
+  passwordHash        String
+  fullName            String?
+  role                Role            @default(ROLE_WRK)
+  preferredLang       String          @default("vi")
+  failedLoginAttempts Int             @default(0)
+  lockedUntil         DateTime?
+  deletedAt           DateTime?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  refreshTokens       RefreshToken[]
+  consents            ConsentRecord[]
+  documents           Document[]
+  contracts           ContractDna[]
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model ConsentRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  purpose   String   // e.g. "ANONYMOUS_DATA", "AI_ANALYSIS", "FAMILY_LINK"
+  granted   Boolean  @default(false) // BR_037: mặc định tắt
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, purpose])
+}
+
+model Corridor {
+  id        String    @id // e.g. "VN-JP"
+  name      String
+  origin    String    // "VN"
+  dest      String    // "JP"
+  currency  String    // "JPY"
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+
+  lawPacks  LawPack[]
+}
+
+model LawPack {
+  id            String        @id @default(cuid())
+  corridorId    String
+  version       String
+  title         String
+  status        LawPackStatus @default(DRAFT)
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+  publishedBy   String?
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  corridor      Corridor      @relation(fields: [corridorId], references: [id])
+  rules         LawRule[]
+
+  @@unique([corridorId, version])
+  @@index([corridorId, status, effectiveFrom])
+}
+
+model LawRule {
+  id          String   @id @default(cuid())
+  lawPackId   String
+  code        String   // e.g. "JP_OT_WEEKDAY", "JP_NIGHT_SHIFT"
+  title       String
+  category    String   // "OVERTIME", "MIN_WAGE", "DEDUCTION", "LEAVE"
+  formulaJson Json     // Deterministic parameters for PayGuard
+  sourceRef   String   // Citation in Labor Standards Act
+  createdAt   DateTime @default(now())
+
+  lawPack     LawPack  @relation(fields: [lawPackId], references: [id], onDelete: Cascade)
+
+  @@unique([lawPackId, code])
+}
+
+model Document {
+  id          String       @id @default(cuid())
+  userId      String
+  type        DocumentType
+  fileName    String
+  mimeType    String
+  sizeBytes   Int
+  storageKey  String       // S3/MinIO object key
+  sha256Hash  String
+  ocrStatus   OcrStatus    @default(PENDING)
+  ocrResult   Json?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contractDna ContractDna?
+
+  @@index([userId, type])
+}
+
+model ContractDna {
+  id               String   @id @default(cuid())
+  userId           String
+  documentId       String   @unique
+  corridorId       String   @default("VN-JP")
+  baseSalary       Int      // Monthly base salary in JPY
+  hourlyRate       Float?
+  standardHoursDay Float    @default(8)
+  standardDaysWeek Float    @default(5)
+  allowancesJson   Json?
+  deductionsJson   Json?
+  effectiveFrom    DateTime?
+  effectiveTo      DateTime?
+  verifiedByUser   Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document         Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model SystemConfig {
+  key         String   @id
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+// ==========================================
+// Phase 2: Work Log, PayGuard & Evidence Vault
+// ==========================================
+
+model WorkLog {
+  id           String   @id @default(cuid())
+  userId       String
+  workDate     DateTime
+  regularHours Float    @default(8)
+  overtimeHours Float   @default(0)
+  nightHours   Float    @default(0)
+  holidayHours Float    @default(0)
+  note         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, workDate])
+  @@index([userId, workDate])
+}
+
+model PayGuardReport {
+  id              String   @id @default(cuid())
+  userId          String
+  periodMonth     String   // "2026-10"
+  corridorId      String   @default("VN-JP")
+  lawPackVersion  String
+  expectedGross   Int
+  actualGross     Int
+  difference      Int
+  matchStatus     String   // BR_008: "Khớp" | "Lệch" | "Chưa đủ"
+  legalLabel      String   // BR_009: "Phù hợp" | "Nên hỏi lại" | "Chưa có quy tắc"
+  breakdownJson   Json
+  createdAt       DateTime @default(now())
+
+  @@index([userId, periodMonth])
+}
+
+model EvidenceItem {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  category    String   // "PAYSLIP" | "CONTRACT" | "WORKLOG" | "CHAT" | "OTHER"
+  sha256Hash  String
+  storageKey  String?
+  metadataJson Json?
+  capturedAt  DateTime @default(now())
+
+  @@index([userId, category])
+}
+
+// ==========================================
+// Phase 3: Rights Agent, Cost Ledger, Debt & Family
+// ==========================================
+
+enum AgentActionStatus {
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  UNDONE
+  EXPIRED
+}
+
+model AgentAction {
+  id           String            @id @default(cuid())
+  userId       String
+  agentName    String            // 6 specialized agents
+  autonomyLevel Int              // BR_006 / BR_048: 0..2
+  actionType   String
+  payloadJson  Json
+  status       AgentActionStatus @default(PENDING_APPROVAL)
+  expiresAt    DateTime          // BR_047: 48h approval window
+  undoUntil    DateTime?         // BR_047: 24h undo window
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@index([userId, status])
+}
+
+model CostEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  category    String   // "BROKER_FEE" | "TRAINING" | "VISA" | "FLIGHT" | "OTHER"
+  amountVnd   Int
+  capVnd      Int?     // BR_030: legal fee cap
+  legalLabel  String   // BR_009
+  note        String?
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model DebtRecord {
+  id            String   @id @default(cuid())
+  userId        String
+  lenderName    String
+  principalVnd  Int
+  remainingVnd  Int
+  monthlyDueVnd Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model FamilyLink {
+  id         String    @id @default(cuid())
+  userId     String
+  tokenHash  String    @unique
+  label      String    // e.g. "Mẹ ở quê"
+  expiresAt  DateTime  // 90 days default
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+}
+
+// ==========================================
+// Phase 4: Case Pack Desk, Admin, Notifications, Plans, Anonymous Data
+// ==========================================
+
+enum CasePackStatus {
+  DRAFT
+  SHARED
+  IN_REVIEW
+  RESOLVED
+  CLOSED
+}
+
+model CasePack {
+  id          String         @id @default(cuid())
+  userId      String
+  supporterId String?
+  title       String
+  summary     String
+  status      CasePackStatus @default(DRAFT)
+  shareToken  String?        @unique
+  expiresAt   DateTime?      // 30 days default
+  evidenceIds String[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([userId, status])
+  @@index([supporterId, status])
+}
+
+model SupportOrg {
+  id        String   @id @default(cuid())
+  name      String
+  orgType   String   // "NGO" | "UNION" | "LEGAL_AID" | "EMBASSY_DESK"
+  corridor  String   @default("VN-JP")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  action    String
+  target    String
+  metaJson  Json?
+  createdAt DateTime @default(now())
+
+  @@index([actorId, createdAt])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  body      String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, readAt])
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  planCode  String   @default("FREE") // "FREE" | "PRO"
+  updatedAt DateTime @updatedAt
+}
+
+model AnonymousContribution {
+  id           String   @id @default(cuid())
+  corridorId   String   @default("VN-JP")
+  prefecture   String?
+  industry     String?
+  baseSalary   Int
+  overtimeRate Float?
+  createdAt    DateTime @default(now())
+
+  @@index([corridorId, prefecture, industry])
+}
