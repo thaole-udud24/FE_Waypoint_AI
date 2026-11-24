@@ -45,7 +45,7 @@ export function RegisterPage() {
       <AuthHero />
 
       <AuthFormShell
-        title="Tạo tài khoản Lộ Trình"
+        title="Tạo tài khoản Waypoint"
         subtitle={`Bước ${step}/3 · ${STEPS[step - 1]}`}
         footer={
           <>
