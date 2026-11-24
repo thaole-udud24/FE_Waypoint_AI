@@ -104,14 +104,14 @@ export function EvidencePage() {
         </TabsContent>
 
         <TabsContent value="passport">
-          <Card className="overflow-hidden border-none text-white" style={{ background: "var(--grad-planet)" }}>
+          <Card className="overflow-hidden border-none text-white" style={{ background: "var(--grad-cta)" }}>
             <CardContent className="pt-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-xs font-medium uppercase tracking-wide text-white/80">{pick(t.passportTitle, lang, "Hộ chiếu làm việc")}</p>
                   <p className="mt-1 text-lg font-semibold">{user?.name ?? "—"}</p>
                 </div>
-                <HankoStamp label="携帯可" className="border-white/70 text-white" />
+                <HankoStamp label={{ vi: "Mang theo được", en: "Portable", ja: "携帯可" }} className="border-white/70 text-white" />
               </div>
 
               <div className="mt-5 grid grid-cols-2 gap-4 text-sm">

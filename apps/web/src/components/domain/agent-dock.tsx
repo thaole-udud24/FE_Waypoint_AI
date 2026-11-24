@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Bot, FileText, Wallet, ShieldCheck, Scale, Users, Archive, Check, X, Lightbulb } from "lucide-react";
+import { Bot, FileText, Wallet, ShieldCheck, Scale, Users, Archive, Check, X, Lightbulb, RotateCcw } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage, pick } from "@/lib/i18n";
@@ -30,8 +30,13 @@ const mockSuggestion = {
 const t = {
   yourAssistant: { vi: "Trợ lý của bạn", en: "Your assistant", ja: "あなたのアシスタント" },
   waitingApproval: { vi: "Chờ bạn duyệt", en: "Waiting for your approval", ja: "承認待ち" },
-  decidedApproved: { vi: "Đã duyệt — có thể hoàn tác trong 24 giờ.", en: "Approved — can be undone within 24 hours.", ja: "承認済み — 24時間以内なら取り消し可能。" },
+  decidedApproved: {
+    vi: "Đã duyệt — có thể hoàn tác trong 24 giờ.",
+    en: "Approved — can be undone within 24 hours.",
+    ja: "承認済み — 24時間以内なら取り消し可能。",
+  },
   decidedRejected: { vi: "Đã từ chối.", en: "Rejected.", ja: "却下しました。" },
+  undo: { vi: "Hoàn tác", en: "Undo", ja: "取り消す" },
   hoursLeftToDecide: {
     vi: (h: number) => `Còn ${h} giờ để quyết định`,
     en: (h: number) => `${h} hours left to decide`,
@@ -57,7 +62,7 @@ export function AgentDock() {
     <Card className="overflow-hidden border-none" style={{ background: "linear-gradient(160deg,var(--card-butter) 0%,var(--card-sky) 100%)" }}>
       <CardContent className="pt-6">
         <div className="mb-3 flex items-center justify-between">
-          <p className="text-sm font-medium text-[var(--color-text-primary)]">{pick(t.yourAssistant, lang, "Trợ lý của bạn")}</p>
+          <p className="text-sm font-semibold text-[var(--color-text-primary)]">{pick(t.yourAssistant, lang, "Trợ lý của bạn")}</p>
           {lang === "ja" && (
             <span lang="ja" className="text-xs text-[var(--color-text-secondary)]" style={{ fontFamily: "var(--font-jp)" }}>
               助手
@@ -68,7 +73,7 @@ export function AgentDock() {
         <div className="relative mx-auto mb-4 flex h-24 w-24 items-center justify-center">
           <div className="orbit-ring-1 absolute inset-0 rounded-full border border-dashed border-[var(--stroke-orbit)]" />
           <div
-            className="relative z-10 grid h-12 w-12 place-items-center rounded-full text-white"
+            className="relative z-10 grid h-12 w-12 place-items-center rounded-full text-white shadow-sm"
             style={{ background: "var(--grad-planet)" }}
           >
             <Bot className="h-5 w-5" />
@@ -89,18 +94,27 @@ export function AgentDock() {
           })}
         </div>
 
-        <p className="text-center text-xs text-[var(--color-text-secondary)]">{pick(mockRunningTask, lang, mockRunningTask.vi)}</p>
+        <p className="text-center text-xs font-medium text-[var(--color-text-secondary)]">{pick(mockRunningTask, lang, mockRunningTask.vi)}</p>
 
-        <div className="mt-4 rounded-[16px] bg-[var(--color-surface)]/70 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-disabled)]">{pick(t.waitingApproval, lang, "Chờ bạn duyệt")}</p>
+        <div className="mt-4 rounded-[16px] border border-[var(--color-border)] bg-[var(--color-surface)]/80 p-3 backdrop-blur-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]">{pick(t.waitingApproval, lang, "Chờ bạn duyệt")}</p>
           <p className="mt-1 text-sm text-[var(--color-text-primary)]">{pick(mockApproval.description, lang, mockApproval.description.vi)}</p>
           {decided ? (
-            <p className="mt-2 text-xs font-medium text-[var(--color-text-secondary)]">
-              {decided === "approved" ? pick(t.decidedApproved, lang, t.decidedApproved.vi) : pick(t.decidedRejected, lang, t.decidedRejected.vi)}
-            </p>
+            <div className="mt-2 flex items-center justify-between gap-2">
+              <p className="text-xs font-medium text-[var(--color-text-secondary)]">
+                {decided === "approved" ? pick(t.decidedApproved, lang, t.decidedApproved.vi) : pick(t.decidedRejected, lang, t.decidedRejected.vi)}
+              </p>
+              <button
+                type="button"
+                onClick={() => setDecided(null)}
+                className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-[var(--color-primary)] hover:underline"
+              >
+                <RotateCcw className="h-3 w-3" /> {pick(t.undo, lang, "Hoàn tác")}
+              </button>
+            </div>
           ) : (
             <>
-              <p className="mt-1 text-xs text-[var(--color-text-disabled)]">{t.hoursLeftToDecide[lang](mockApproval.hoursLeft)}</p>
+              <p className="mt-1 text-xs text-[var(--color-text-secondary)]">{t.hoursLeftToDecide[lang](mockApproval.hoursLeft)}</p>
               <div className="mt-2 flex gap-2">
                 <Button size="sm" onClick={() => setDecided("approved")}>
                   <Check className="h-3.5 w-3.5" /> {pick(t.approve, lang, "Duyệt")}
@@ -114,7 +128,7 @@ export function AgentDock() {
         </div>
 
         <p className="mt-3 flex items-start gap-1.5 rounded-[16px] border border-dashed border-[var(--color-border)] px-3 py-2 text-xs text-[var(--color-text-secondary)]">
-          <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--color-gold)]" />
+          <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--color-gold-text)]" />
           {pick(mockSuggestion, lang, mockSuggestion.vi)}
         </p>
 
@@ -132,7 +146,7 @@ export function AgentDock() {
           </Link>
         </div>
 
-        <p className="mt-3 text-center text-[11px] text-[var(--color-text-disabled)]">{pick(t.neverAutoSend, lang, t.neverAutoSend.vi)}</p>
+        <p className="mt-3 text-center text-[11px] text-[var(--color-text-secondary)]">{pick(t.neverAutoSend, lang, t.neverAutoSend.vi)}</p>
       </CardContent>
     </Card>
   );
