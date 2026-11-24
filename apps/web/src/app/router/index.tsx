@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AuthLayout } from "@/layouts/auth-layout";
 import { MainLayout } from "@/layouts/main-layout";
 import { BlankLayout } from "@/layouts/blank-layout";
@@ -109,8 +110,21 @@ const AgentAssistantPage = lazy(() =>
   import("@/features/agent/pages/agent-assistant-page").then((m) => ({ default: m.AgentAssistantPage }))
 );
 
+function PageFallback() {
+  return (
+    <div className="space-y-4 p-4 md:p-6">
+      <Skeleton className="h-8 w-48 rounded-xl" />
+      <Skeleton className="h-36 w-full rounded-[28px]" />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Skeleton className="h-44 w-full rounded-[28px]" />
+        <Skeleton className="h-44 w-full rounded-[28px]" />
+      </div>
+    </div>
+  );
+}
+
 function withSuspense(node: React.ReactNode) {
-  return <Suspense fallback={null}>{node}</Suspense>;
+  return <Suspense fallback={<PageFallback />}>{node}</Suspense>;
 }
 
 export const router = createBrowserRouter([

@@ -12,7 +12,7 @@ export function DeskActivatePage() {
   const [password, setPassword] = useState("");
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4" style={{ background: "linear-gradient(160deg,#DDF7EC 0%,#D3E1FF 100%)" }}>
+    <div className="flex min-h-screen items-center justify-center p-4" style={{ background: "var(--grad-desk-bg)" }}>
       <Card className="w-full max-w-sm">
         <CardContent className="pt-8">
           <WaypointLogo variant="light" size="md" className="mb-5" />
