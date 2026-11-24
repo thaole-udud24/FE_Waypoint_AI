@@ -5,6 +5,12 @@
     "dev:web": "pnpm --filter waypoint-web dev",
     "build:web": "pnpm --filter waypoint-web build",
     "lint:web": "pnpm --filter waypoint-web lint",
-    "test:web": "pnpm --filter waypoint-web test"
+    "test:web": "pnpm --filter waypoint-web test",
+    "dev:api": "pnpm --filter waypoint-api dev",
+    "build:api": "pnpm --filter waypoint-api build",
+    "lint:api": "pnpm --filter waypoint-api lint",
+    "test:api": "pnpm --filter waypoint-api test",
+    "db:migrate": "pnpm --filter waypoint-api prisma migrate deploy",
+    "db:seed": "pnpm --filter waypoint-api prisma db seed"
   }
 }
