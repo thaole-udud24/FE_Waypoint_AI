@@ -8,9 +8,20 @@ export interface LawArticle {
   title: Tri;
   summary: Tri;
   category: Tri;
+  sourceName: Tri;
+  sourceUrl: string;
+  lastVerified: string;
 }
 
-// shortcut: dữ liệu mẫu, thay bằng gọi MOD_008 API (Law Pack) khi backend sẵn sàng.
+// shortcut: dữ liệu mẫu đối chiếu với văn bản gốc trên e-Gov (Cổng pháp luật điện tử của Nhật Bản,
+// do Cơ quan Số hóa Chính phủ Nhật Bản vận hành) — thay bằng gọi MOD_008 API (Law Pack) khi backend sẵn sàng.
+const LSA_SOURCE: Tri = {
+  vi: "e-Gov Nhật Bản · Luật Tiêu chuẩn Lao động (労働基準法)",
+  en: "e-Gov Japan · Labor Standards Act (労働基準法)",
+  ja: "e-Gov法令検索・労働基準法",
+};
+const LSA_URL = "https://laws.e-gov.go.jp/law/322AC0000000049";
+
 export const mockLawArticles: LawArticle[] = [
   {
     id: "law-1",
@@ -22,6 +33,9 @@ export const mockLawArticles: LawArticle[] = [
       ja: "22時〜5時の残業は通常賃金の最低135%で計算されます。",
     },
     category: { vi: "Tiền lương", en: "Wages", ja: "賃金" },
+    sourceName: LSA_SOURCE,
+    sourceUrl: LSA_URL,
+    lastVerified: "2026-11-02",
   },
   {
     id: "law-2",
@@ -33,6 +47,9 @@ export const mockLawArticles: LawArticle[] = [
       ja: "有効な時間外労働協定がない限り、1日8時間・週40時間を超えてはならない。",
     },
     category: { vi: "Giờ làm", en: "Work hours", ja: "労働時間" },
+    sourceName: LSA_SOURCE,
+    sourceUrl: LSA_URL,
+    lastVerified: "2026-11-02",
   },
   {
     id: "law-3",
@@ -44,6 +61,9 @@ export const mockLawArticles: LawArticle[] = [
       ja: "6か月間継続勤務した労働者は、最低10日間の有給休暇を取得できる。",
     },
     category: { vi: "Nghỉ phép", en: "Leave", ja: "休暇" },
+    sourceName: LSA_SOURCE,
+    sourceUrl: LSA_URL,
+    lastVerified: "2026-11-02",
   },
   {
     id: "law-4",
@@ -55,5 +75,8 @@ export const mockLawArticles: LawArticle[] = [
       ja: "契約には賃金、労働時間、契約期間、解雇条件を明記しなければならない。",
     },
     category: { vi: "Hợp đồng", en: "Contract", ja: "契約" },
+    sourceName: LSA_SOURCE,
+    sourceUrl: LSA_URL,
+    lastVerified: "2026-11-02",
   },
 ];

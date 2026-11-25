@@ -3,6 +3,12 @@ import { SpaceScene } from "./space-scene";
 import { WaypointLogo } from "@/components/brand/waypoint-logo";
 import { useLanguage, pick } from "@/lib/i18n";
 
+const features = [
+  { icon: ShieldCheck, label: { vi: "Đối chiếu lương", en: "Pay check", ja: "給与照合" } },
+  { icon: Archive, label: { vi: "Lưu bằng chứng", en: "Evidence vault", ja: "証拠保管" } },
+  { icon: Scale, label: { vi: "Tra cứu luật", en: "Legal compass", ja: "法令検索" } },
+];
+
 const t = {
   badge: {
     vi: "Nền tảng đồng hành cho người lao động xa xứ",
@@ -29,19 +35,10 @@ const t = {
     en: "Reconcile contracts, pay and working hours transparently with legal references — and keep portable evidence throughout your journey.",
     ja: "契約・給与・労働時間を法的根拠とともに透明に照合し、いつでも持ち運べる証拠として安全に保管できます。",
   },
-  f1: { vi: "Đối chiếu lương", en: "Pay check", ja: "給与照合" },
-  f2: { vi: "Lưu bằng chứng", en: "Evidence vault", ja: "証拠保管" },
-  f3: { vi: "Tra cứu luật", en: "Legal compass", ja: "法令検索" },
 };
 
 export function AuthHero() {
   const { lang } = useLanguage();
-
-  const features = [
-    { icon: ShieldCheck, label: pick(t.f1, lang, "Đối chiếu lương") },
-    { icon: Archive, label: pick(t.f2, lang, "Lưu bằng chứng") },
-    { icon: Scale, label: pick(t.f3, lang, "Tra cứu luật") },
-  ];
 
   return (
     <div
@@ -73,11 +70,11 @@ export function AuthHero() {
         <div className="mt-7 flex flex-wrap gap-2.5">
           {features.map(({ icon: Icon, label }) => (
             <div
-              key={label}
+              key={label.vi}
               className="flex items-center gap-2 rounded-full border border-[var(--chip-border)] bg-[var(--chip-surface)] px-3.5 py-2 text-xs font-medium text-[var(--color-text-primary)] backdrop-blur-md"
             >
               <Icon className="h-3.5 w-3.5 text-[var(--color-primary)]" />
-              {label}
+              {pick(label, lang, label.vi)}
             </div>
           ))}
         </div>

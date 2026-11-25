@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export interface KanbanCard {
@@ -36,12 +36,26 @@ export function KanbanBoard({
 }) {
   const [dragging, setDragging] = useState<{ cardId: string; fromColumnId: string } | null>(null);
   const [overColumn, setOverColumn] = useState<string | null>(null);
+  const [announcement, setAnnouncement] = useState("");
+  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  function moveByKeyboard(cardId: string, fromColumnId: string, direction: -1 | 1) {
+    const fromIndex = columns.findIndex((c) => c.id === fromColumnId);
+    const toIndex = fromIndex + direction;
+    const toColumn = columns[toIndex];
+    if (!toColumn) return;
+    onMoveCard(cardId, fromColumnId, toColumn.id);
+    setAnnouncement(`Đã chuyển thẻ sang cột "${toColumn.label}"`);
+    // Focus follows the card into its new column after the re-render.
+    requestAnimationFrame(() => cardRefs.current[cardId]?.focus());
+  }
 
   return (
     <div
       className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[repeat(var(--kanban-cols),minmax(0,1fr))]"
       style={{ "--kanban-cols": columns.length } as CSSProperties}
     >
+      <span role="status" aria-live="polite" className="sr-only">{announcement}</span>
       {columns.map((col) => (
         <div
           key={col.id}
@@ -76,11 +90,26 @@ export function KanbanBoard({
           {col.cards.map((card) => (
             <div
               key={card.id}
+              ref={(el) => {
+                cardRefs.current[card.id] = el;
+              }}
               draggable
               onDragStart={() => setDragging({ cardId: card.id, fromColumnId: col.id })}
               onDragEnd={() => setDragging(null)}
+              role="button"
+              tabIndex={0}
+              aria-label={`${card.title}, cột "${col.label}". Dùng mũi tên trái/phải để chuyển cột.`}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowRight") {
+                  e.preventDefault();
+                  moveByKeyboard(card.id, col.id, 1);
+                } else if (e.key === "ArrowLeft") {
+                  e.preventDefault();
+                  moveByKeyboard(card.id, col.id, -1);
+                }
+              }}
               className={cn(
-                "cursor-grab rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] shadow-sm hover:shadow-md active:cursor-grabbing",
+                "cursor-grab rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] shadow-sm hover:shadow-md active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]",
                 dragging?.cardId === card.id && "opacity-40"
               )}
             >

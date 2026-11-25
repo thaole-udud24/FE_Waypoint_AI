@@ -29,6 +29,7 @@ const t = {
     en: "Didn't receive it? Check your spam folder or try again in a few minutes.",
     ja: "メールが届かない場合は迷惑メールフォルダをご確認いただくか、数分後に再試行してください。",
   },
+  email: { vi: "Email", en: "Email", ja: "メールアドレス" },
   sendLink: { vi: "Gửi liên kết đặt lại", en: "Send reset link", ja: "再設定リンクを送信" },
 };
 
@@ -72,7 +73,7 @@ export function ForgotPasswordPage() {
         ) : (
           <form className="mt-7 space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-[var(--color-text-primary)]">Email</label>
+              <label className="mb-1.5 block text-sm font-medium text-[var(--color-text-primary)]">{pick(t.email, lang, t.email.vi)}</label>
               <Input type="email" placeholder="ban@email.com" error={!!errors.email} {...register("email")} />
               {errors.email && <p className="mt-1 text-xs text-[var(--color-error)]">{errors.email.message}</p>}
             </div>

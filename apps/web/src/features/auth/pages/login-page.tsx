@@ -54,7 +54,7 @@ export function LoginPage() {
     // (admin@…, desk@…, còn lại là WRK). Thay bằng gọi API auth khi có backend.
     await new Promise((r) => setTimeout(r, 300));
     if (values.password.length < 6) {
-      setServerError(pick(t.loginFailed, lang, "Đăng nhập thất bại"));
+      setServerError(pick(t.loginFailed, lang, t.loginFailed.vi));
       return;
     }
     const local = values.email.split("@")[0].toLowerCase();
@@ -80,19 +80,19 @@ export function LoginPage() {
           <>
             {pick(t.noAccount, lang, t.noAccount.vi)}{" "}
             <Link to="/register" className="font-medium text-[var(--color-primary)] hover:underline">
-              {pick(t.register, lang, "Đăng ký")}
+              {pick(t.register, lang, t.register.vi)}
             </Link>
           </>
         }
       >
         <form className="mt-7 space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-[var(--color-text-primary)]">{pick(t.email, lang, "Email")}</label>
+            <label className="mb-1.5 block text-sm font-medium text-[var(--color-text-primary)]">{pick(t.email, lang, t.email.vi)}</label>
             <Input type="email" placeholder="ban@email.com" error={!!errors.email} {...register("email")} />
             {errors.email && <p className="mt-1 text-xs text-[var(--color-error)]">{errors.email.message}</p>}
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-[var(--color-text-primary)]">{pick(t.password, lang, "Mật khẩu")}</label>
+            <label className="mb-1.5 block text-sm font-medium text-[var(--color-text-primary)]">{pick(t.password, lang, t.password.vi)}</label>
             <Input type="password" placeholder="••••••••" error={!!errors.password} {...register("password")} />
             {errors.password && <p className="mt-1 text-xs text-[var(--color-error)]">{errors.password.message}</p>}
           </div>
@@ -110,7 +110,7 @@ export function LoginPage() {
           {serverError && <p className="text-xs text-[var(--color-error)]">{serverError}</p>}
 
           <Button type="submit" className="w-full" loading={isSubmitting}>
-            {pick(t.submit, lang, "Tiếp tục")}
+            {pick(t.submit, lang, t.submit.vi)}
           </Button>
         </form>
 

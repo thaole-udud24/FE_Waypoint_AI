@@ -46,3 +46,7 @@ pnpm test:web     # vitest
 ## Trạng thái
 
 Toàn bộ dữ liệu trong `apps/web/src/features/**/data/*.ts` là **dữ liệu mẫu** (đánh dấu `shortcut:` trong code), chưa nối API thật — xem [`apps/web/README.md`](./apps/web/README.md) để biết chi tiết kỹ thuật của riêng FE web.
+
+## Đóng góp
+
+Quy ước đặt tên nhánh và commit (feat/fix/chore...) xem tại [`CONTRIBUTING.md`](./CONTRIBUTING.md).
