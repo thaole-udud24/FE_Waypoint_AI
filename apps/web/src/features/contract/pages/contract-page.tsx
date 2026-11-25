@@ -51,11 +51,11 @@ function ContractSidebar() {
       <Card>
         <CardContent className="space-y-3 pt-6">
           <div className="flex items-center gap-2.5">
-            <FileText className="h-4 w-4 text-[var(--color-text-secondary)]" />
-            <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">{c.fileName}</p>
+            <FileText className="h-4 w-4 shrink-0 text-[var(--color-text-secondary)]" />
+            <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">{pick(c.fileName, lang, c.fileName.vi)}</p>
           </div>
           <div className="flex items-center gap-2.5 text-sm text-[var(--color-text-secondary)]">
-            <Building2 className="h-4 w-4" /> {c.employer}
+            <Building2 className="h-4 w-4 shrink-0" /> {pick(c.employer, lang, c.employer.vi)}
           </div>
           <div className="flex items-center gap-2.5 text-sm text-[var(--color-text-secondary)]">
             <Briefcase className="h-4 w-4" /> {pick(c.position, lang, c.position.vi)}
@@ -128,14 +128,14 @@ export function ContractPage() {
                   <CardContent className="pt-6">
                     <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                       <p className="text-sm font-semibold text-[var(--color-text-primary)]">
-                        {pick(t.article, lang, "Điều")} {clause.no} · {pick(clause.topic, lang, clause.topic.vi)}
+                        {lang === "ja" ? `第${clause.no}条` : `${pick(t.article, lang, "Điều")} ${clause.no}`} · {pick(clause.topic, lang, clause.topic.vi)}
                       </p>
                       <LawLabel value={clause.lawLabel} />
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div className="rounded-[20px] bg-[var(--color-surface-secondary)] p-4">
-                        <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-text-disabled)]">
+                        <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]">
                           {pick(t.original, lang, "Gốc · 原文")}
                         </p>
                         <p lang="ja" className="text-sm leading-relaxed text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-jp)" }}>
@@ -143,7 +143,7 @@ export function ContractPage() {
                         </p>
                       </div>
                       <div className="rounded-[20px] bg-[var(--card-sky)] p-4">
-                        <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-text-disabled)]">
+                        <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]">
                           {pick(t.translationLabel, lang, "Bản dịch")}
                         </p>
                         <p className="text-sm leading-relaxed text-[var(--color-text-primary)]">{pick(clause.translation, lang, clause.translation.vi)}</p>

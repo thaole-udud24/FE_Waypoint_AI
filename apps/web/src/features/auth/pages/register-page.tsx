@@ -17,7 +17,7 @@ const STEPS = [
 ];
 
 const t = {
-  title: { vi: "Tạo tài khoản Lộ Trình", en: "Create your Lộ Trình account", ja: "ロー・チンのアカウントを作成" },
+  title: { vi: "Tạo tài khoản Waypoint", en: "Create your Waypoint account", ja: "Waypoint アカウントを作成" },
   step: { vi: "Bước", en: "Step", ja: "ステップ" },
   haveAccount: { vi: "Đã có tài khoản?", en: "Already have an account?", ja: "すでにアカウントをお持ちですか？" },
   login: { vi: "Đăng nhập", en: "Log in", ja: "ログイン" },

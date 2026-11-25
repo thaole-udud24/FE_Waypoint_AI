@@ -20,7 +20,7 @@ export function Avatar({
       )}
     >
       <AvatarPrimitive.Image src={src} alt={alt} className="h-full w-full object-cover" />
-      <AvatarPrimitive.Fallback className="text-xs font-medium text-[var(--color-primary-dark)]">
+      <AvatarPrimitive.Fallback className="text-xs font-semibold text-[var(--color-primary)]">
         {fallback}
       </AvatarPrimitive.Fallback>
     </AvatarPrimitive.Root>

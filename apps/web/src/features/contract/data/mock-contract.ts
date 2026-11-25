@@ -16,10 +16,18 @@ export interface ContractAlert {
 
 // shortcut: dữ liệu mẫu, thay bằng gọi MOD_003 API (trích xuất hợp đồng) khi backend sẵn sàng.
 export const mockContract = {
-  fileName: "Hợp đồng lao động - Công ty ABC.pdf",
+  fileName: {
+    vi: "Hợp đồng lao động - Công ty ABC.pdf",
+    en: "Employment Contract - ABC Co.pdf",
+    ja: "雇用契約書 - ABC株式会社.pdf",
+  } as Tri,
   signedAt: "02/09/2026",
   expiresAt: "01/09/2027",
-  employer: "Công ty TNHH Sản xuất ABC",
+  employer: {
+    vi: "Công ty TNHH Sản xuất ABC",
+    en: "ABC Manufacturing Co., Ltd.",
+    ja: "ABC製造株式会社",
+  } as Tri,
   position: { vi: "Kỹ thuật viên lắp ráp", en: "Assembly technician", ja: "組立技術者" } as Tri,
   terms: [
     {

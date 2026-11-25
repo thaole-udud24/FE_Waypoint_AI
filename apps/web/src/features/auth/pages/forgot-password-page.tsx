@@ -5,37 +5,37 @@ import { Link } from "react-router-dom";
 import { MailCheck, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLanguage, pick } from "@/lib/i18n";
 import { AuthHero } from "../components/auth-hero";
 import { AuthFormShell } from "../components/auth-form-shell";
 import { forgotPasswordSchema, type ForgotPasswordFormValues } from "../schemas/forgot-password-schema";
-import { useLanguage, pick } from "@/lib/i18n";
 
 const t = {
-  checkEmailTitle: { vi: "Kiểm tra email của bạn", en: "Check your email", ja: "メールをご確認ください" },
-  forgotTitle: { vi: "Quên mật khẩu?", en: "Forgot password?", ja: "パスワードをお忘れですか？" },
-  sentTo: {
-    vi: (email: string) => `Mình đã gửi liên kết đặt lại mật khẩu tới ${email}.`,
-    en: (email: string) => `We sent a password reset link to ${email}.`,
-    ja: (email: string) => `パスワード再設定リンクを ${email} に送信しました。`,
+  sentTitle: { vi: "Kiểm tra email của bạn", en: "Check your email", ja: "メールをご確認ください" },
+  title: { vi: "Quên mật khẩu?", en: "Forgot password?", ja: "パスワードをお忘れですか？" },
+  sentSub: {
+    vi: (e: string) => `Mình đã gửi liên kết đặt lại mật khẩu tới ${e}.`,
+    en: (e: string) => `We sent a password reset link to ${e}.`,
+    ja: (e: string) => `${e} にパスワード再設定リンクを送信しました。`,
   },
-  enterEmail: {
+  sub: {
     vi: "Nhập email đã đăng ký, mình sẽ gửi liên kết đặt lại mật khẩu.",
-    en: "Enter your registered email and we'll send you a password reset link.",
-    ja: "登録済みのメールアドレスを入力してください。パスワード再設定リンクをお送りします。",
+    en: "Enter your registered email and we'll send a reset link.",
+    ja: "登録済みのメールアドレスを入力してください。再設定リンクを送信します。",
   },
-  backToLogin: { vi: "Quay lại đăng nhập", en: "Back to login", ja: "ログインに戻る" },
-  noEmail: {
+  backToLogin: { vi: "Quay lại đăng nhập", en: "Back to sign in", ja: "ログインに戻る" },
+  spamHint: {
     vi: "Không thấy email? Kiểm tra mục thư rác hoặc thử lại sau vài phút.",
-    en: "Don't see the email? Check your spam folder or try again in a few minutes.",
-    ja: "メールが届かない場合は、迷惑メールフォルダをご確認のうえ、数分後に再度お試しください。",
+    en: "Didn't receive it? Check your spam folder or try again in a few minutes.",
+    ja: "メールが届かない場合は迷惑メールフォルダをご確認いただくか、数分後に再試行してください。",
   },
   email: { vi: "Email", en: "Email", ja: "メールアドレス" },
-  sendResetLink: { vi: "Gửi liên kết đặt lại", en: "Send reset link", ja: "再設定リンクを送信" },
+  sendLink: { vi: "Gửi liên kết đặt lại", en: "Send reset link", ja: "再設定リンクを送信" },
 };
 
 export function ForgotPasswordPage() {
-  const { lang } = useLanguage();
   const [sentTo, setSentTo] = useState<string | null>(null);
+  const { lang } = useLanguage();
 
   const {
     register,
@@ -54,8 +54,8 @@ export function ForgotPasswordPage() {
       <AuthHero />
 
       <AuthFormShell
-        title={sentTo ? pick(t.checkEmailTitle, lang, t.checkEmailTitle.vi) : pick(t.forgotTitle, lang, t.forgotTitle.vi)}
-        subtitle={sentTo ? (t.sentTo[lang] ?? t.sentTo.vi)(sentTo) : pick(t.enterEmail, lang, t.enterEmail.vi)}
+        title={sentTo ? pick(t.sentTitle, lang, t.sentTitle.vi) : pick(t.title, lang, t.title.vi)}
+        subtitle={sentTo ? t.sentSub[lang](sentTo) : pick(t.sub, lang, t.sub.vi)}
         footer={
           <Link to="/login" className="inline-flex items-center gap-1.5 font-medium text-[var(--color-primary)] hover:underline">
             <ArrowLeft className="h-3.5 w-3.5" />
@@ -66,7 +66,9 @@ export function ForgotPasswordPage() {
         {sentTo ? (
           <div className="mt-7 flex flex-col items-center gap-2 rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface-secondary)] py-8 text-center">
             <MailCheck className="h-8 w-8 text-[var(--color-primary)]" />
-            <p className="max-w-[220px] text-sm text-[var(--color-text-secondary)]">{pick(t.noEmail, lang, t.noEmail.vi)}</p>
+            <p className="max-w-[240px] text-sm text-[var(--color-text-secondary)]">
+              {pick(t.spamHint, lang, t.spamHint.vi)}
+            </p>
           </div>
         ) : (
           <form className="mt-7 space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -76,7 +78,7 @@ export function ForgotPasswordPage() {
               {errors.email && <p className="mt-1 text-xs text-[var(--color-error)]">{errors.email.message}</p>}
             </div>
             <Button type="submit" className="w-full" loading={isSubmitting}>
-              {pick(t.sendResetLink, lang, t.sendResetLink.vi)}
+              {pick(t.sendLink, lang, t.sendLink.vi)}
             </Button>
           </form>
         )}

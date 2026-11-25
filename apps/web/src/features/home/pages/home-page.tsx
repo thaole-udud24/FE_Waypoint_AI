@@ -24,12 +24,31 @@ import { useLanguage, pick } from "@/lib/i18n";
 // shortcut: dữ liệu mẫu minh họa bố cục Home. Thay bằng dữ liệu thật từ
 // MOD_005 PayGuard AI / MOD_004 Work Log / MOD_013 Case Pack Desk khi có API.
 const mockMismatch = {
-  period: "Kỳ lương 11/2026",
+  period: { vi: "Kỳ lương 11/2026", en: "Pay period 11/2026", ja: "2026年11月分給与" },
   amount: "¥18,400",
   reason: {
     vi: "Giờ làm thêm ban đêm chưa được tính phụ trội theo đúng mức luật định.",
     en: "Night overtime hours have not been paid at the legally required premium rate.",
     ja: "深夜残業の割増賃金が法定の最低率で計算されていません。",
+  },
+};
+
+const todoCardI18n: Record<string, { title: Record<"en" | "ja", string>; meta: Record<"en" | "ja", string> }> = {
+  t1: {
+    title: { en: "Log today's work hours", ja: "本日の勤務時間を記録" },
+    meta: { en: "Work log · due today", ja: "勤務記録・本日期限" },
+  },
+  t2: {
+    title: { en: "Verify 3 payslip fields", ja: "給与明細の3項目を確認" },
+    meta: { en: "Documents", ja: "書類" },
+  },
+  t3: {
+    title: { en: "Draft overtime premium inquiry", ja: "残業割増率の問い合わせ文を作成" },
+    meta: { en: "Contract", ja: "契約" },
+  },
+  t4: {
+    title: { en: "Upload this month's payslip", ja: "今月の給与明細をアップロード" },
+    meta: { en: "Documents", ja: "書類" },
   },
 };
 
@@ -63,8 +82,17 @@ const todoColumnLabel: Record<string, { en: string; ja: string }> = {
   done: { en: "Done", ja: "完了" },
 };
 
-const mockSalary = { period: "Kỳ 11/2026", netReceived: "¥214,600", matched: 27, total: 30 };
-const mockCasePack = { status: "Đang chia sẻ", org: "Nghiệp đoàn hỗ trợ ABC", expiresInDays: 12 };
+const mockSalary = {
+  period: { vi: "Kỳ 11/2026", en: "Period 11/2026", ja: "2026年11月分" },
+  netReceived: "¥214,600",
+  matched: 27,
+  total: 30,
+};
+const mockCasePack = {
+  status: "Đang chia sẻ",
+  org: { vi: "Nghiệp đoàn hỗ trợ ABC", en: "ABC Support Union", ja: "ABC支援組合" },
+  expiresInDays: 12,
+};
 const mockLawPack = { corridor: "VN → JP", version: "v2026.10", updatedAt: "02/11/2026" };
 
 const t = {
@@ -131,7 +159,7 @@ export function HomePage() {
         <CardContent className="grid grid-cols-1 items-center gap-6 pt-6 sm:grid-cols-12">
           <div className="sm:col-span-7">
             <div className="flex items-center gap-3">
-              <Avatar fallback={initials} className="h-12 w-12 ring-2 ring-white" />
+              <Avatar fallback={initials} className="h-12 w-12 ring-2 ring-[var(--color-surface)]" />
               <div>
                 <h1 className="flex items-center gap-2 text-[length:var(--font-size-sectionHeading)] font-semibold text-[var(--color-text-primary)]">
                   {pick({ en: "Hi", ja: "こんにちは" }, lang, "Chào")} {user?.name ?? "bạn"}
@@ -154,7 +182,7 @@ export function HomePage() {
                 <div className="flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-medium text-[var(--color-text-primary)]">
-                      {mockMismatch.period} {pick(t.mismatchDetected, lang, "— phát hiện lệch lương")}
+                      {pick(mockMismatch.period, lang, mockMismatch.period.vi)} {pick(t.mismatchDetected, lang, "— phát hiện lệch lương")}
                     </p>
                     <span className="font-[var(--font-numeric)] text-lg font-semibold text-[var(--color-attention-text)]">
                       {mockMismatch.amount}
@@ -168,7 +196,7 @@ export function HomePage() {
                     >
                       {pick(t.viewReconDetail, lang, "Xem chi tiết đối chiếu")} <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
-                    <HankoStamp label="要確認" />
+                    <HankoStamp label={{ vi: "Cần xác nhận", en: "Needs review", ja: "要確認" }} />
                   </div>
                 </div>
               </div>
@@ -177,13 +205,13 @@ export function HomePage() {
 
           <div className="sm:col-span-5">
             <OrbitHero
-              centerLabel={mockSalary.period}
+              centerLabel={pick(mockSalary.period, lang, mockSalary.period.vi)}
               centerValue={mockSalary.netReceived}
               satellites={[
-                { label: pick({ en: "Contract", ja: "契約" }, lang, "Hợp đồng"), icon: FileText, status: "ok", angle: -90 },
-                { label: pick({ en: "Work log", ja: "勤務" }, lang, "Giờ làm"), icon: Clock3, status: "ok", angle: 0 },
-                { label: pick({ en: "Payslip", ja: "給与明細" }, lang, "Phiếu lương"), icon: Wallet, status: "warn", angle: 90 },
-                { label: pick({ en: "Net pay", ja: "手取り額" }, lang, "Tiền nhận"), icon: ShieldCheck, status: "bad", angle: 180 },
+                { label: pick({ en: "Contract", ja: "契約" }, lang, "Hợp đồng"), icon: FileText, status: "ok", angle: -90, to: "/contract" },
+                { label: pick({ en: "Work log", ja: "勤務" }, lang, "Giờ làm"), icon: Clock3, status: "ok", angle: 0, to: "/work-log" },
+                { label: pick({ en: "Payslip", ja: "給与明細" }, lang, "Phiếu lương"), icon: Wallet, status: "warn", angle: 90, to: "/documents" },
+                { label: pick({ en: "Net pay", ja: "手取り額" }, lang, "Tiền nhận"), icon: ShieldCheck, status: "bad", angle: 180, to: "/payguard" },
               ]}
             />
             <p className="mt-2 text-center text-xs font-medium text-[var(--color-text-secondary)]">
@@ -217,10 +245,18 @@ export function HomePage() {
             <CardContent className="pt-6">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-sm font-medium text-[var(--color-text-primary)]">{pick(t.todoTitle, lang, "Việc cần làm")}</p>
-                <span className="text-xs text-[var(--color-text-disabled)]">{pick(t.dragHint, lang, "Kéo thẻ để đổi trạng thái")}</span>
+                <span className="text-xs text-[var(--color-text-secondary)]">{pick(t.dragHint, lang, "Kéo thẻ để đổi trạng thái")}</span>
               </div>
               <KanbanBoard
-                columns={todoColumns.map((c) => ({ ...c, label: pick(todoColumnLabel[c.id] ?? {}, lang, c.label) }))}
+                columns={todoColumns.map((c) => ({
+                  ...c,
+                  label: pick(todoColumnLabel[c.id] ?? {}, lang, c.label),
+                  cards: c.cards.map((card) => {
+                    const tr = todoCardI18n[card.id];
+                    if (!tr || lang === "vi") return card;
+                    return { ...card, title: tr.title[lang], meta: tr.meta[lang] };
+                  }),
+                }))}
                 onMoveCard={moveCard}
               />
             </CardContent>
@@ -234,7 +270,7 @@ export function HomePage() {
           <Card className="overflow-hidden border-none text-white" style={{ background: "var(--grad-cta)" }}>
             <CardContent className="pt-6">
               <p className="text-xs font-medium uppercase tracking-wide text-white/80">
-                {mockSalary.period} {pick(t.netReceivedLabel, lang, "— thực nhận")}
+                {pick(mockSalary.period, lang, mockSalary.period.vi)} {pick(t.netReceivedLabel, lang, "— thực nhận")}
               </p>
               <p className="mt-1 font-[var(--font-numeric)] text-[length:var(--font-size-numeric)] font-semibold tracking-[var(--letter-spacing-numeric)]">
                 {mockSalary.netReceived}
@@ -245,33 +281,37 @@ export function HomePage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-[var(--card-mint)]">
-            <CardContent className="flex items-start gap-3 pt-6">
-              <div className="rounded-full bg-white/60 p-2">
-                <FolderCheck className="h-4 w-4 text-[var(--color-teal)]" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-[var(--color-text-primary)]">{pick(t.casePackTitle, lang, "Hồ sơ nhờ hỗ trợ")}</p>
-                <p className="text-sm text-[var(--color-text-secondary)]">
-                  {pick({ en: "Sharing", ja: "共有中" }, lang, mockCasePack.status)} {t.sharedWith[lang](mockCasePack.org)}
-                </p>
-                <p className="mt-1 text-xs text-[var(--color-text-disabled)]">{t.shareExpiresIn[lang](mockCasePack.expiresInDays)}</p>
-              </div>
-            </CardContent>
-          </Card>
+          <Link to="/case-pack" className="block">
+            <Card className="bg-[var(--card-mint)] transition-transform duration-150 hover:-translate-y-0.5">
+              <CardContent className="flex items-start gap-3 pt-6">
+                <div className="rounded-full bg-[var(--chip-surface)] p-2">
+                  <FolderCheck className="h-4 w-4 text-[var(--color-teal-text)]" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-[var(--color-text-primary)]">{pick(t.casePackTitle, lang, "Hồ sơ nhờ hỗ trợ")}</p>
+                  <p className="text-sm text-[var(--color-text-secondary)]">
+                    {pick({ en: "Sharing", ja: "共有中" }, lang, mockCasePack.status)} {t.sharedWith[lang](pick(mockCasePack.org, lang, mockCasePack.org.vi))}
+                  </p>
+                  <p className="mt-1 text-xs font-medium text-[var(--color-teal-text)]">{t.shareExpiresIn[lang](mockCasePack.expiresInDays)}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
 
-          <Card className="bg-[var(--card-butter)]">
-            <CardContent className="flex items-start gap-3 pt-6">
-              <div className="rounded-full bg-white/60 p-2">
-                <ScrollText className="h-4 w-4 text-[var(--color-gold)]" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-[var(--color-text-primary)]">Law Pack {mockLawPack.corridor}</p>
-                <p className="text-sm text-[var(--color-text-secondary)]">{t.lawPackVersion[lang](mockLawPack.version, mockLawPack.updatedAt)}</p>
-              </div>
-              <HankoStamp label="公布済" />
-            </CardContent>
-          </Card>
+          <Link to="/legal-compass" className="block">
+            <Card className="bg-[var(--card-butter)] transition-transform duration-150 hover:-translate-y-0.5">
+              <CardContent className="flex items-start gap-3 pt-6">
+                <div className="rounded-full bg-[var(--chip-surface)] p-2">
+                  <ScrollText className="h-4 w-4 text-[var(--color-gold-text)]" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-[var(--color-text-primary)]">Law Pack {mockLawPack.corridor}</p>
+                  <p className="text-sm text-[var(--color-text-secondary)]">{t.lawPackVersion[lang](mockLawPack.version, mockLawPack.updatedAt)}</p>
+                </div>
+                <HankoStamp label={{ vi: "Đã công bố", en: "Published", ja: "公布済" }} />
+              </CardContent>
+            </Card>
+          </Link>
 
           <Card className="border-dashed">
             <CardContent className="flex items-center gap-3 pt-6">

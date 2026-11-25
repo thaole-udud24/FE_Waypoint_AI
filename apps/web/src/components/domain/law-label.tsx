@@ -5,11 +5,11 @@ import { useLanguage, pick } from "@/lib/i18n";
 export type LawLabelValue = "compliant" | "ask_again" | "no_rule";
 
 const config: Record<LawLabelValue, { label: { vi: string; en: string; ja: string }; className: string }> = {
-  compliant: { label: { vi: "Phù hợp", en: "Compliant", ja: "適合" }, className: "bg-[var(--card-mint)] text-[var(--color-teal)]" },
-  ask_again: { label: { vi: "Nên hỏi lại", en: "Worth asking", ja: "要確認" }, className: "bg-[var(--card-butter)] text-[#9a7400]" },
+  compliant: { label: { vi: "Phù hợp", en: "Compliant", ja: "適合" }, className: "bg-[var(--card-mint)] text-[var(--color-teal-text)]" },
+  ask_again: { label: { vi: "Nên hỏi lại", en: "Worth asking", ja: "要確認" }, className: "bg-[var(--card-butter)] text-[var(--color-gold-text)]" },
   no_rule: {
     label: { vi: "Chưa có quy tắc", en: "No rule yet", ja: "規定なし" },
-    className: "bg-[var(--color-surface-secondary)] text-[var(--color-text-disabled)]",
+    className: "bg-[var(--color-surface-secondary)] text-[var(--color-text-secondary)]",
   },
 };
 
